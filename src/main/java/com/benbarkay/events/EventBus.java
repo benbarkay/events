@@ -35,7 +35,7 @@ public class EventBus<T> implements EventSource<T>, EventEmitter<T> {
     }
 
     @Override
-    public EventSubscription<T> subscribe(EventSubscriber<T> subscriber, Executor executor) {
+    public EventSubscription subscribe(EventSubscriber<T> subscriber, Executor executor) {
         EventBusSubscription<T> subscription = new EventBusSubscription<>(
                 subscriber,
                 executor,

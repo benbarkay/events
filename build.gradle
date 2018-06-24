@@ -1,12 +1,29 @@
-group 'com.benbarkay'
-version '1.0-SNAPSHOT'
+group 'com.benbarkay.events'
+version '0.1.0'
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+        }
+    }
 }
 
 dependencies {

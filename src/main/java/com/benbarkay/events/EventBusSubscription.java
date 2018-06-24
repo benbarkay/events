@@ -4,7 +4,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
-class EventBusSubscription<T> implements EventSubscription<T> {
+class EventBusSubscription<T> implements EventSubscription {
 
     private final EventSubscriber<T> subscriber;
     private final Executor queue;
@@ -39,7 +39,7 @@ class EventBusSubscription<T> implements EventSubscription<T> {
     }
 
     @Override
-    public <E extends Throwable> EventSubscription<T> error(Class<E> type, Consumer<E> consumer) {
+    public <E extends Throwable> EventSubscription error(Class<E> type, Consumer<E> consumer) {
         //noinspection unchecked
         handler.error(type, consumer);
         return this;
