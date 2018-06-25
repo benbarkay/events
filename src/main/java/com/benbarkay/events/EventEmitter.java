@@ -35,7 +35,7 @@ public interface EventEmitter<T> {
         EventBus<F> bus = EventBus.blocking();
         bus.map(fn)
                 .error(this::error)
-                .peek(this::emit);
+                .forward(this);
         return bus;
     }
 

@@ -160,7 +160,7 @@ public interface EventSource<T> {
     /**
      * Captures the next event of this source, blocking until it is available.
      */
-    default T capture() throws InterruptedException {
+    default T capture() {
         return capture(Long.MAX_VALUE, TimeUnit.DAYS);
     }
 

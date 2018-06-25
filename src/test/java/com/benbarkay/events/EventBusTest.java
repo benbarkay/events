@@ -45,4 +45,22 @@ public class EventBusTest {
         expected.forEach(bus::emit);
         assertEquals(expected, actual);
     }
+
+    @Test
+    public void demapEmitsMappedMessages() {
+        List<String> expected = Arrays.asList("1", "2", "3");
+        List<String> actual = new ArrayList<>(expected.size());
+
+        EventBus<String> bus = EventBus.blocking();
+        bus.consume(actual::add);
+
+        EventEmitter<Object> mappedEmitter = bus.demap(String::valueOf);
+
+        System.gc();
+        mappedEmitter.emit(1);
+        mappedEmitter.emit(2);
+        mappedEmitter.emit(3);
+
+        assertEquals(expected, actual);
+    }
 }
