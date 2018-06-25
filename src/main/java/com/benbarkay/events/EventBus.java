@@ -53,7 +53,7 @@ public class EventBus<T> implements EventSource<T>, EventEmitter<T> {
 
     @Override
     public void emit(T event) {
-        queue.execute(() -> subscriptions.forEach(s -> s.emit(event)));
+        queue.execute(() -> new ArrayList<>(subscriptions).forEach(s -> s.emit(event)));
     }
 
     @Override

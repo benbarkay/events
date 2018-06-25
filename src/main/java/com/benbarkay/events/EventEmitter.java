@@ -34,7 +34,6 @@ public interface EventEmitter<T> {
     default <F> EventEmitter<F> demap(Function<F, T> fn) {
         EventBus<F> bus = EventBus.blocking();
         bus.map(fn)
-                .error(this::error)
                 .forward(this);
         return bus;
     }

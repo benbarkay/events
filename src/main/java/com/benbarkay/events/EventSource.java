@@ -1,5 +1,6 @@
 package com.benbarkay.events;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
@@ -153,35 +154,17 @@ public interface EventSource<T> {
      * @return  This event source.
      */
     default EventSource<T> forward(EventEmitter<T> recipient) {
-        subscribe(new ForwardingSubscriber<>(recipient)).error(recipient::error);
+        subscribe(new ForwardingSubscriber<>(recipient));
         return this;
     }
 
     /**
      * Captures the next event of this source, blocking until it is available.
      */
-    default T capture() {
-        return capture(Long.MAX_VALUE, TimeUnit.DAYS);
-    }
-
-    /**
-     * Captures the next event of this source, blocking until it is available.
-     * @param timeout   Amount of time until giving up.
-     * @param timeUnit  The time unit of {@code timeout}.
-     * @return  The captured event, or {@code null} if the timeout has elapsed.
-     */
-    default T capture(long timeout, TimeUnit timeUnit) {
-        CountDownLatch latch = new CountDownLatch(1);
-        AtomicReference<T> valueRef = new AtomicReference<>();
-        EventSubscription subscription = peek(valueRef::set).run(latch::countDown);
-        try {
-            latch.await(timeout, timeUnit);
-            return valueRef.get();
-        } catch (InterruptedException e) {
-            return null;
-        } finally {
-            subscription.cancel();
-        }
+    default CompletableFuture<T> capture() {
+        CompletableFuture<T> future = new CompletableFuture<>();
+        peek(future::complete).subscribe(EventSubscriber.cancelling());
+        return future;
     }
 
     /**

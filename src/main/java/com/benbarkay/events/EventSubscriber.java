@@ -5,6 +5,10 @@ package com.benbarkay.events;
  * @param <T>   The type of events this subscriber handles.
  */
 public interface EventSubscriber<T> {
+    static <T> EventSubscriber<T> cancelling() {
+        return (e, s) -> s.cancel();
+    }
+
     /**
      * Accepts an event.
      * @param event         The event to accept.
